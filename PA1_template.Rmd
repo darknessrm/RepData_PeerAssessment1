@@ -30,19 +30,24 @@ totalSPD <- aggregate(steps~date, data=dtRAW, FUN=sum, na.rm=TRUE)
 str(totalSPD)
 head(totalSPD)
 tail(totalSPD)
+png('plot1.png')
 hist(totalSPD$steps, breaks=20, col="grey",
      main="Total number of steps taken per day \n (missing data removed)",
      xlab="Number of steps")
+dev.off()
 muTSPD <- mean(totalSPD$steps)
 meTSPD <- median(totalSPD$steps)
 
 ## What is the average daily activity pattern?
 
 muSPI <- aggregate(steps~interval, data=dtRAW, FUN=mean, na.rm=TRUE)
+png
+png('plot2.png')
 plot(muSPI, type="l",
      main="Average number of steps per 5-minute interval",
      xlab="5-minute intervals",
      ylab="Average numberof steps")
+dev.off()
 numMaxStep <- muSPI[which(muSPI$steps==max(muSPI$steps)), ]$interval
 
 ## Imputing missing values
@@ -59,19 +64,25 @@ tail(dtNEW)
 newTSPD <- aggregate(steps~date, data=dtNEW, FUN=sum, na.rm=TRUE)
 muNTSPD <- mean(newTSPD$steps)
 meNTSPD <- median(newTSPD$steps)
+png('plot3.png')
 hist(newTSPD$steps, breaks=20, col="grey",
      main="Total number of steps taken per day \n (missing data filled in)",
      xlab="Number of steps")
+dev.off()
 mumeComp <- data.frame("mean"=c(muTSPD, muNTSPD), "median"=c(meTSPD, meNTSPD))
 rownames(mumeComp) <- c("naRrmoved", "naFilled")
 mumeComp
 par(mfrow=c(1, 2))
+png('plot4.png')
 hist(totalSPD$steps, breaks=20, col="grey",
      main="Total number of steps taken per day \n (missing data removed)",
      xlab="Number of steps")
+dev.off()
+png('plot5.png')
 hist(newTSPD$steps, breaks=20, col="grey",
      main="Total number of steps taken per day \n (missing data filled in)",
      xlab="Number of steps")
+dev.off()
 par(mfrow=c(1, 1))
 
 
@@ -83,6 +94,7 @@ str(dtNEW)
 head(dtNEW)
 tail(dtNEW)
 weekSPI <- aggregate(steps ~ weekdays + interval, dtNEW, FUN=mean, na.rm=TRUE)
+png('plot6.png')
 xyplot(steps ~ interval | weekdays, data=weekSPI, type="l", layout=c(1, 2),
        xlab="Interval", ylab="Number of steps")
-
+dev.off()
